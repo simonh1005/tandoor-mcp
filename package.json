@@ -1,0 +1,26 @@
+{
+  "name": "tandoor-mcp",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "concurrently": "^9.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
+    "@types/express": "^5.0.3",
+    "axios": "^1.11.0",
+    "express": "^5.1.0"
+  },
+  "scripts": {
+    "start": "bun run index.ts",
+    "build": "bun build index.ts --outdir=dist --target=node18 --format=cjs",
+    "test": "bun test",
+    "watch": "bun run index.ts --watch",
+    "inspector": "concurrently \"bun run watch\" \"bunx @modelcontextprotocol/inspector\""
+  }
+}
