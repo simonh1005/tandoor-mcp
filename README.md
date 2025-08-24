@@ -95,13 +95,15 @@ Add the following to your `claude_desktop_config.json`:
   "mcpServers": {
     "tandoor-mcp": {
       "command": "bun",
-      "args": ["run", "--cwd=/path/to/tandoor-mcp", "start"],
+      "args": ["run", "--cwd=/path/to/tandoor-mcp", "--stdio", "start"],
       "disabled": false,
       "autoApprove": []
     }
   }
 }
 ```
+
+**Important**: The `--stdio` parameter is crucial for proper logging behavior. It tells the MCP server to suppress console output that could interfere with the MCP protocol communication between Claude Desktop and the server. Without this parameter, you may experience communication issues or see unwanted log messages in the Claude Desktop interface.
 
 Replace `/path/to/tandoor-mcp` with the actual path to your tandoor-mcp directory.
 
