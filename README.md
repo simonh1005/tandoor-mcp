@@ -23,9 +23,15 @@ This MCP server provides three main tools:
   - Integrates with Tandoor's shopping list functionality
 
 - **add-recipe-to-meal-plan**: Add recipes to your meal plan
+
   - Schedule recipes for specific dates and meal types
   - Automatically adds all recipe ingredients to your shopping list
   - Include optional titles and notes for meal planning
+
+- **list-meal-types**: Browse available meal types
+  - List all meal types configured in your Tandoor system
+  - Essential for finding the correct meal type ID when planning meals
+  - Helps ensure proper meal type selection for meal planning
 
 ## Installation
 

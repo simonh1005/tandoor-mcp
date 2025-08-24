@@ -4,6 +4,7 @@ import {
   addShoppingListItem,
   addRecipeToMealPlan,
   listKeywords,
+  listMealTypes,
   listRecipes,
 } from "./tandoor";
 
@@ -132,6 +133,24 @@ export function registerEndpoints(server: McpServer): McpServer {
             title,
             "Added via MCP"
           ).then((result) => JSON.stringify(result)),
+        },
+      ],
+    })
+  );
+
+  server.registerTool(
+    "list-meal-types",
+    {
+      title: "List Meal Types",
+      description:
+        "List all available meal types in your Tandoor system. Use this to find the correct meal type ID when adding recipes to your meal plan.",
+      inputSchema: {},
+    },
+    async () => ({
+      content: [
+        {
+          type: "text",
+          text: await listMealTypes().then((result) => JSON.stringify(result)),
         },
       ],
     })

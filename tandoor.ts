@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { logger } from "./logger.js";
 
 const TANDOOR_API_URL = process.env.TANDOOR_API_URL;
@@ -44,6 +44,11 @@ type TandoorRecipe = {
   new: boolean;
 };
 
+type TandoorError = {
+  error: string;
+  details: string;
+};
+
 // Initialize HTTP client with credentials
 const tandoorClient = axios.create({
   baseURL: TANDOOR_API_URL,
@@ -68,10 +73,7 @@ export async function listRecipes(
     .then((response) => {
       return response.data.results;
     })
-    .catch((error) => {
-      logger.error("Error fetching recipes:", error);
-      return { error: "Failed to fetch recipes", details: error.message };
-    });
+    .catch(handleTandoorError("Error fetching recipes:"));
 }
 
 export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
@@ -84,10 +86,7 @@ export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
     .then((response) => {
       return response.data.results;
     })
-    .catch((error) => {
-      logger.error("Error fetching keywords:", error);
-      return { error: "Failed to fetch keywords", details: error.message };
-    });
+    .catch(handleTandoorError("Error fetching keywords:"));
 }
 
 export async function addShoppingListItem(
@@ -105,13 +104,7 @@ export async function addShoppingListItem(
       logger.log("Added shopping list item:", res.data);
       return { success: true };
     })
-    .catch((error) => {
-      logger.error("Error adding shopping list item:", error);
-      return {
-        error: "Failed to add shopping list item",
-        details: error.message,
-      };
-    });
+    .catch(handleTandoorError("Error adding shopping list item:"));
 }
 
 export async function addRecipeToMealPlan(
@@ -139,11 +132,31 @@ export async function addRecipeToMealPlan(
         message: `Recipe added to meal plan. Note: This will also add all recipe ingredients to your shopping list automatically.`,
       };
     })
-    .catch((error) => {
-      logger.error("Error adding recipe to meal plan:", error);
+    .catch(handleTandoorError("Error adding recipe to meal plan:"));
+}
+
+export async function listMealTypes(): Promise<object> {
+  return tandoorClient
+    .get("meal-type/")
+    .then((res) => {
+      logger.log("Fetched meal types:", res.data);
       return {
-        error: "Failed to add recipe to meal plan",
-        details: error.message,
+        success: true,
+        meal_types: res.data,
       };
-    });
+    })
+    .catch(handleTandoorError("Error fetching meal types:"));
+}
+
+function handleTandoorError(message: string) {
+  return function (error: AxiosError): TandoorError {
+    const readableError = `{code: ${error.code} , "message": ${JSON.stringify(
+      error.response?.data
+    )}`;
+    logger.error(message, readableError);
+    return {
+      error: message,
+      details: readableError,
+    };
+  };
 }

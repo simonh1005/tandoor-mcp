@@ -82,9 +82,9 @@ try {
       logger.error("Failed to start server:", error);
       process.exit(1);
     }
-    /* logger.log(
+    logger.log(
       `MCP Stateless Streamable HTTP Server listening on port ${PORT}`
-    ); */
+    );
   });
 } catch (error) {
   logger.error("Failed to set up the server:", error);
