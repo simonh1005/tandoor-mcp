@@ -111,8 +111,9 @@ export function registerEndpoints(server: McpServer): McpServer {
         fromDate: z.string({
           description: "Date for the meal plan entry in YYYY-MM-DD format.",
         }),
-        mealTypeId: z.number({
-          description: "ID of the meal type (e.g., Breakfast, Lunch, Dinner).",
+        mealTypeName: z.string({
+          description:
+            "Name of the meal type (e.g., Breakfast, Lunch, Dinner).",
         }),
         title: z
           .string({
@@ -121,7 +122,13 @@ export function registerEndpoints(server: McpServer): McpServer {
           .optional(),
       },
     },
-    async ({ recipeId, servings, fromDate, mealTypeId, title }) => ({
+    async ({
+      recipeId,
+      servings,
+      fromDate,
+      mealTypeName: mealTypeId,
+      title,
+    }) => ({
       content: [
         {
           type: "text",

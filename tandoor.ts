@@ -76,6 +76,15 @@ export async function listRecipes(
     .catch(handleTandoorError("Error fetching recipes:"));
 }
 
+async function getRecipeById(recipeId: number): Promise<TandoorRecipe> {
+  return tandoorClient
+    .get(`/recipe/${recipeId}/`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch(handleTandoorError("Error fetching recipe by ID:"));
+}
+
 export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
   const params: Record<string, string | number | undefined> = {};
   params.query = name;
@@ -111,16 +120,17 @@ export async function addRecipeToMealPlan(
   recipeId: number,
   servings: number,
   fromDate: string,
-  mealTypeId: number,
+  mealTypeName: string,
   title?: string,
   note?: string
 ): Promise<object> {
+  const recipe = await getRecipeById(recipeId);
   return tandoorClient
     .post("meal-plan/", {
-      recipe: recipeId,
+      recipe: recipe,
       servings: servings,
       from_date: fromDate,
-      meal_type: mealTypeId,
+      meal_type: { name: mealTypeName },
       title: title,
       note: note,
     })
