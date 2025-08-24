@@ -113,3 +113,37 @@ export async function addShoppingListItem(
       };
     });
 }
+
+export async function addRecipeToMealPlan(
+  recipeId: number,
+  servings: number,
+  fromDate: string,
+  mealTypeId: number,
+  title?: string,
+  note?: string
+): Promise<object> {
+  return tandoorClient
+    .post("meal-plan/", {
+      recipe: recipeId,
+      servings: servings,
+      from_date: fromDate,
+      meal_type: mealTypeId,
+      title: title,
+      note: note,
+    })
+    .then((res) => {
+      logger.log("Added recipe to meal plan:", res.data);
+      return {
+        success: true,
+        meal_plan: res.data,
+        message: `Recipe added to meal plan. Note: This will also add all recipe ingredients to your shopping list automatically.`,
+      };
+    })
+    .catch((error) => {
+      logger.error("Error adding recipe to meal plan:", error);
+      return {
+        error: "Failed to add recipe to meal plan",
+        details: error.message,
+      };
+    });
+}

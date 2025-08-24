@@ -1,6 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { addShoppingListItem, listKeywords, listRecipes } from "./tandoor";
+import {
+  addShoppingListItem,
+  addRecipeToMealPlan,
+  listKeywords,
+  listRecipes,
+} from "./tandoor";
 
 export function registerEndpoints(server: McpServer): McpServer {
   server.registerTool(
@@ -84,6 +89,49 @@ export function registerEndpoints(server: McpServer): McpServer {
           text: await addShoppingListItem(name, quantity).then((result) =>
             JSON.stringify(result)
           ),
+        },
+      ],
+    })
+  );
+
+  server.registerTool(
+    "add-recipe-to-meal-plan",
+    {
+      title: "Add Recipe to Meal Plan",
+      description:
+        "Add a recipe to your Tandoor meal plan. Note: Adding a recipe to the meal plan will also automatically add all of its ingredients to your shopping list.",
+      inputSchema: {
+        recipeId: z.number({
+          description: "ID of the recipe to add to the meal plan.",
+        }),
+        servings: z.number({
+          description: "Number of servings for the recipe.",
+        }),
+        fromDate: z.string({
+          description: "Date for the meal plan entry in YYYY-MM-DD format.",
+        }),
+        mealTypeId: z.number({
+          description: "ID of the meal type (e.g., Breakfast, Lunch, Dinner).",
+        }),
+        title: z
+          .string({
+            description: "Optional title for the meal plan entry.",
+          })
+          .optional(),
+      },
+    },
+    async ({ recipeId, servings, fromDate, mealTypeId, title }) => ({
+      content: [
+        {
+          type: "text",
+          text: await addRecipeToMealPlan(
+            recipeId,
+            servings,
+            fromDate,
+            mealTypeId,
+            title,
+            "Added via MCP"
+          ).then((result) => JSON.stringify(result)),
         },
       ],
     })

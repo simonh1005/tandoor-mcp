@@ -18,8 +18,14 @@ This MCP server provides three main tools:
   - Useful for discovering available tags for recipe filtering
 
 - **add-shopping-list-item**: Add items to your Tandoor shopping list
+
   - Add food items with quantity
   - Integrates with Tandoor's shopping list functionality
+
+- **add-recipe-to-meal-plan**: Add recipes to your meal plan
+  - Schedule recipes for specific dates and meal types
+  - Automatically adds all recipe ingredients to your shopping list
+  - Include optional titles and notes for meal planning
 
 ## Installation
 
