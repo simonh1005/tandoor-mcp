@@ -3,8 +3,10 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import express from "express";
 import type { Request, Response } from "express";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 
 import { registerEndpoints } from "./registerEndpoints.js";
+import { logger } from "./logger.js";
 
 const app = express();
 app.use(express.json());
@@ -21,14 +23,14 @@ app.post("/mcp", async (req: Request, res: Response) => {
         sessionIdGenerator: undefined,
       });
     res.on("close", () => {
-      console.log("Request closed");
+      logger.log("Request closed");
       transport.close();
       mcpServer.close();
     });
     await mcpServer.connect(transport);
     await transport.handleRequest(req, res, req.body);
   } catch (error) {
-    console.error("Error handling MCP request:", error);
+    logger.error("Error handling MCP request:", error);
     if (!res.headersSent) {
       res.status(500).json({
         jsonrpc: "2.0",
@@ -44,7 +46,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
 
 // SSE notifications not supported in stateless mode
 app.get("/mcp", async (req: Request, res: Response) => {
-  console.log("Received GET MCP request");
+  logger.log("Received GET MCP request");
   res.writeHead(405).end(
     JSON.stringify({
       jsonrpc: "2.0",
@@ -59,7 +61,7 @@ app.get("/mcp", async (req: Request, res: Response) => {
 
 // Session termination not needed in stateless mode
 app.delete("/mcp", async (req: Request, res: Response) => {
-  console.log("Received DELETE MCP request");
+  logger.log("Received DELETE MCP request");
   res.writeHead(405).end(
     JSON.stringify({
       jsonrpc: "2.0",
@@ -77,15 +79,15 @@ const PORT = 3000;
 try {
   app.listen(PORT, (error) => {
     if (error) {
-      console.error("Failed to start server:", error);
+      logger.error("Failed to start server:", error);
       process.exit(1);
     }
-    console.log(
+    /* logger.log(
       `MCP Stateless Streamable HTTP Server listening on port ${PORT}`
-    );
+    ); */
   });
 } catch (error) {
-  console.error("Failed to set up the server:", error);
+  logger.error("Failed to set up the server:", error);
   process.exit(1);
 }
 

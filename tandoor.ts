@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logger } from "./logger.js";
 
 const TANDOOR_API_URL = process.env.TANDOOR_API_URL;
 const TANDOOR_API_TOKEN = process.env.TANDOOR_API_TOKEN;
@@ -60,7 +61,7 @@ export async function listRecipes(
   params.query = name;
   params.keywords = keywords;
 
-  console.log("Fetching recipes with params:", params);
+  logger.log("Fetching recipes with params:", params);
 
   return tandoorClient
     .get("/recipe", { params })
@@ -68,7 +69,7 @@ export async function listRecipes(
       return response.data.results;
     })
     .catch((error) => {
-      console.error("Error fetching recipes:", error);
+      logger.error("Error fetching recipes:", error);
       return { error: "Failed to fetch recipes", details: error.message };
     });
 }
@@ -76,7 +77,7 @@ export async function listRecipes(
 export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
   const params: Record<string, string | number | undefined> = {};
   params.query = name;
-  console.log("Fetching keywords with params:", params);
+  logger.log("Fetching keywords with params:", params);
 
   return tandoorClient
     .get("/keyword", { params })
@@ -84,7 +85,7 @@ export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
       return response.data.results;
     })
     .catch((error) => {
-      console.error("Error fetching keywords:", error);
+      logger.error("Error fetching keywords:", error);
       return { error: "Failed to fetch keywords", details: error.message };
     });
 }
@@ -101,11 +102,14 @@ export async function addShoppingListItem(
       amount: quantity,
     })
     .then((res) => {
-      console.log("Added shopping list item:", res.data);
+      logger.log("Added shopping list item:", res.data);
       return { success: true };
     })
     .catch((error) => {
-      console.error("Error fetching keywords:", error);
-      return { error: "Failed to fetch keywords", details: error.message };
+      logger.error("Error adding shopping list item:", error);
+      return {
+        error: "Failed to add shopping list item",
+        details: error.message,
+      };
     });
 }
