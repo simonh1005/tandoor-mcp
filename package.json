@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "bun run index.ts",
-    "build": "bun build index.ts --outdir=dist --target=node18 --format=cjs",
+    "build": "bun build index.ts --outdir=dist --target=node --format=cjs",
     "test": "bun test",
     "watch": "bun run index.ts --watch",
     "inspector": "concurrently \"bun run watch\" \"bunx @modelcontextprotocol/inspector\""

@@ -93,7 +93,8 @@ try {
 
 const mcpStdinServer = getServerInstance();
 const stdioTransport = new StdioServerTransport();
-await mcpStdinServer.connect(stdioTransport);
+
+mcpStdinServer.connect(stdioTransport);
 
 function getServerInstance() {
   const mcpServer = new McpServer({
