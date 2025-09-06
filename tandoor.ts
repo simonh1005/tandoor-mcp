@@ -69,7 +69,7 @@ export async function listRecipes(
   logger.log("Fetching recipes with params:", params);
 
   return tandoorClient
-    .get("/recipe", { params })
+    .get("/recipe/", { params })
     .then((response) => {
       return response.data.results;
     })
@@ -91,7 +91,7 @@ export async function listKeywords(name?: string): Promise<TandoorKeyword[]> {
   logger.log("Fetching keywords with params:", params);
 
   return tandoorClient
-    .get("/keyword", { params })
+    .get("/keyword/", { params })
     .then((response) => {
       return response.data.results;
     })
