@@ -101,7 +101,7 @@ Add the following to your `claude_desktop_config.json`:
   "mcpServers": {
     "tandoor-mcp": {
       "command": "bun",
-      "args": ["run", "--cwd=/path/to/tandoor-mcp", "--stdio", "start"],
+      "args": ["run", "--cwd=/path/to/tandoor-mcp", "start", "--stdio"],
       "disabled": false,
       "autoApprove": []
     }
