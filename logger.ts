@@ -1,5 +1,6 @@
 // Central logger utility for MCP server
 // Prevents stdout interference in stdio mode while preserving logging in other modes
+import { settings } from "./settings";
 
 export interface Logger {
   log: (message: string, ...args: any[]) => void;
@@ -8,8 +9,7 @@ export interface Logger {
 
 export function createLogger(): Logger {
   // Detect if we're in stdio mode by checking if stdout is being used for MCP communication
-  const isStdioMode =
-    process.argv.includes("--stdio") || process.env.MCP_TRANSPORT === "stdio";
+  const isStdioMode = settings.mode === "stdio";
 
   return {
     log: (message: string, ...args: any[]) => {
