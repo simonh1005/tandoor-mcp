@@ -18,10 +18,7 @@ export function createLogger(): Logger {
       }
     },
     error: (message: string, ...args: any[]) => {
-      if (!isStdioMode) {
-        console.error(message, ...args);
-      }
-      // In stdio mode, we suppress all output to avoid interfering with MCP protocol
+      console.error(message, ...args);
     },
   };
 }
